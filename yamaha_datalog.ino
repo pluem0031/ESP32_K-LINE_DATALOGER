@@ -623,6 +623,30 @@ void setup() {
   pinMode(MODE_BTN_PIN, INPUT_PULLUP);
   fsInit();
   GPSSerial.begin(GPS_BAUD,SERIAL_8N1,GPS_RX_PIN,GPS_TX_PIN);
+  delay(100);
+
+  // NEO-M8N — ตั้ง update rate 10Hz (UBX-CFG-RATE, measRate=100ms)
+  const uint8_t ubxRate10Hz[] = {
+    0xB5,0x62, 0x06,0x08, 0x06,0x00,
+    0x64,0x00,  // 100ms
+    0x01,0x00,  // navRate=1
+    0x01,0x00,  // timeRef=GPS
+    0x7A,0x12
+  };
+  GPSSerial.write(ubxRate10Hz, sizeof(ubxRate10Hz));
+  delay(100);
+
+  // ปิด GSV (satellite detail) — ลด UART load
+  const uint8_t disableGSV[] = {
+    0xB5,0x62, 0x06,0x01, 0x08,0x00,
+    0xF0,0x03,
+    0x00,0x00,0x00,0x00,0x00,0x00,
+    0x02,0x38
+  };
+  GPSSerial.write(disableGSV, sizeof(disableGSV));
+  delay(100);
+
+  Serial.println("[GPS] NEO-M8N init 10Hz ok");
   KLine.begin(KLINE_BAUD,SERIAL_8N1,KLINE_RX_PIN,KLINE_TX_PIN);
   delay(100);
   klineFastInit();
