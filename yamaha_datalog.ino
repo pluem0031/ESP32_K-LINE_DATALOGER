@@ -61,7 +61,7 @@ struct Config {
   char staSSID[32]   = "MyPhone";
   char staPass[64]   = "phone1234";
   // Server
-  char serverURL[128] = "http://x.x.x.x:5005/api/data";
+  char serverURL[128] = "http://x.x.x.x:5000/api/data";
   // Start/Finish
   double sfLat       = 0.0;
   double sfLon       = 0.0;

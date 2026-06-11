@@ -10,7 +10,7 @@ Yamaha Track Server — รับข้อมูลผ่าน HTTP POST จา
   python server.py
 
 Port forward ที่ router:
-  External 5005 → PC port 5005 (TCP)
+  External 5000 → PC port 5000 (TCP)
 
 เปิด browser:
   http://localhost:5000        (บน PC)
@@ -26,8 +26,7 @@ from flask_socketio import SocketIO
 # ──────────────────────────────────────────────
 #  CONFIG
 # ──────────────────────────────────────────────
-DATA_PORT   = 5005   # ESP32 POST มาที่นี่ (port forward)
-WEB_PORT    = 5000   # เปิดเว็บที่นี่
+PORT = 5000   # ใช้ port เดียว — ทั้ง web dashboard และ POST /api/data
 MAX_HISTORY = 300
 MAX_LAPS    = 50
 
@@ -400,7 +399,7 @@ refreshLaps();
 # ──────────────────────────────────────────────
 if __name__ == '__main__':
     threading.Thread(target=watchdog, daemon=True).start()
-    print(f"[SERVER] รับข้อมูลที่ port :{DATA_PORT} (HTTP POST /api/data)")
-    print(f"[WEB]    http://localhost:{WEB_PORT}")
-    print(f"[WEB]    http://<public-IP>:{WEB_PORT}  (จากนอก)")
-    sio.run(app, host='0.0.0.0', port=WEB_PORT, debug=False, allow_unsafe_werkzeug=True)
+    print(f"[SERVER] http://localhost:{PORT}")
+    
+    print(f"[SERVER] http://<public-IP>:{PORT}  (จากนอก)")
+    sio.run(app, host="0.0.0.0", port=PORT, debug=False, allow_unsafe_werkzeug=True)
